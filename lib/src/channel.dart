@@ -26,16 +26,26 @@ class MethodChannelFlutterIombLibrary extends IombLibrary {
   bool _flutterDebugMode = false;
 
   @override
-  Future<void> sessionConfiguration({required String baseURL, required String offerIdentifier, String? hybridIdentifier}) async {
+  Future<void> sessionConfiguration({
+    required String baseURL,
+    required String offerIdentifier,
+    String? hybridIdentifier,
+    IOMBMeasurementSystem measurementSystem = IOMBMeasurementSystem.iomb,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('baseURL', () => baseURL);
     args.putIfAbsent('offerIdentifier', () => offerIdentifier);
     args.putIfAbsent('hybridIdentifier', () => hybridIdentifier);
+    args.putIfAbsent('measurementSystem', () => measurementSystem.name);
     await _invokeMethod<void>('sessionConfiguration', args);
   }
 
   @override
-  Future<void> logViewEvent({required IOMBViewEvent type, required String category, String? comment}) async {
+  Future<void> logViewEvent({
+    required IOMBViewEvent type,
+    required String category,
+    String? comment,
+  }) async {
     Map<String, dynamic> args = <String, dynamic>{};
     args.putIfAbsent('type', () => type.toString().split('.').last);
     args.putIfAbsent('category', () => category);

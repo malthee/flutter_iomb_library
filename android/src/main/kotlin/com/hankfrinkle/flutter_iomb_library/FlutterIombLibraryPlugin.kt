@@ -11,6 +11,7 @@ import de.infonline.lib.iomb.IOLViewEvent
 import de.infonline.lib.iomb.IOMB
 import de.infonline.lib.iomb.measurements.Measurement
 import de.infonline.lib.iomb.measurements.iomb.IOMBSetup
+import de.infonline.lib.iomb.measurements.iombat.IOMBATSetup
 import de.infonline.lib.iomb.IOLDebug
 
 /** FlutterIombLibraryPlugin */
@@ -36,7 +37,8 @@ class FlutterIombLibraryPlugin: FlutterPlugin, MethodCallHandler {
         sessionConfiguration(
           call.argument<String>("baseURL").orEmpty(),
           call.argument<String>("offerIdentifier").orEmpty(),
-          call.argument<String>("hybridIdentifier")
+          call.argument<String>("hybridIdentifier"),
+          call.argument<String>("measurementSystem") ?: "iomb"
         );
         result.success(true);
       }
@@ -64,14 +66,16 @@ class FlutterIombLibraryPlugin: FlutterPlugin, MethodCallHandler {
 
   // Flutter API methods
 
-  private fun sessionConfiguration(baseURL: String, offerIdentifier: String, hybridIdentifier: String?) {
-    val setup = IOMBSetup(
-      offerIdentifier = offerIdentifier,
-      baseUrl = baseURL,
-      hybridIdentifier = hybridIdentifier)
+  private fun sessionConfiguration(baseURL: String, offerIdentifier: String, hybridIdentifier: String?, measurementSystem: String) {
+    val setup: Measurement.Setup = if (measurementSystem == "iombAt") {
+      IOMBATSetup(offerIdentifier = offerIdentifier, baseUrl = baseURL, hybridIdentifier = hybridIdentifier)
+    } else {
+      IOMBSetup(offerIdentifier = offerIdentifier, baseUrl = baseURL, hybridIdentifier = hybridIdentifier)
+    }
 
     // Create session synchron
     IOMB_SESSION = IOMB.createBlocking(setup)
+    measurementType = setup.type
   }
 
   private fun logViewEvent(type: String, category: String, comment: String?) {
@@ -81,7 +85,7 @@ class FlutterIombLibraryPlugin: FlutterPlugin, MethodCallHandler {
   }
 
   private fun terminateSession() {
-    IOMB.delete(Measurement.Type.IOMB)
+    IOMB.delete(measurementType)
   }
 
   private fun setDebugModeEnabled(enable: Boolean) {
@@ -93,6 +97,7 @@ class FlutterIombLibraryPlugin: FlutterPlugin, MethodCallHandler {
   companion object {
     val logListeners = mutableListOf<(Int, String, String?, Throwable?) -> Unit>()
     lateinit var IOMB_SESSION: Measurement
+    private var measurementType = Measurement.Type.IOMB
   }
 
   private fun uppercase(value: String) : String {

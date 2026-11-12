@@ -123,3 +123,12 @@ For more informations look at the offical [iOS documentation](https://docs.infon
 IombLibrary.instance.android.setDebugModeEnabled(true);
 ```
 For more informations look at the offical [Android documentation](https://docs.infonline.de/infonline-measurement/integration/lib/android/IOMbLib_Android_Interface_API/). 
+
+## Austrian Android measurement (ÖWA)
+
+Pass `measurementSystem: IOMBMeasurementSystem.iombAt` to `sessionConfiguration`
+for ÖWA. Android then uses `IOMBATSetup` and deletes `Measurement.Type.IOMB_AT`
+on opt-out. The default remains `IOMBSetup` / `Measurement.Type.IOMB` for German
+measurement. iOS ignores this option and keeps its existing configuration.
+Use the offer identifier and relay URL supplied for the selected measurement system.
+See the [ÖWA Android integration](https://oewa.at/tech-support/implementierung-android-consentfreie-messung/).

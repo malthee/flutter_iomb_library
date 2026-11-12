@@ -2,18 +2,12 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'channel.dart';
 
-enum IOMBViewEvent {
-  appeared, 
-  refreshed,
-  disappeared
-}
-enum IOMBDebugLevel {
-  off,
-  error,
-  warning,
-  info,
-  trace
-}
+enum IOMBViewEvent { appeared, refreshed, disappeared }
+
+enum IOMBDebugLevel { off, error, warning, info, trace }
+
+/// Android measurement system; iOS uses its existing session configuration.
+enum IOMBMeasurementSystem { iomb, iombAt }
 
 abstract class IombLibrary extends PlatformInterface {
   /// Constructs a FlutterIombLibraryPlatform.
@@ -27,7 +21,7 @@ abstract class IombLibrary extends PlatformInterface {
   ///
   /// Defaults to [MethodChannelFlutterIombLibrary].
   static IombLibrary get instance => _instance;
-  
+
   /// Platform-specific implementations should set this with their own
   /// platform-specific class that extends [IombLibrary] when
   /// they register themselves.
@@ -39,12 +33,26 @@ abstract class IombLibrary extends PlatformInterface {
   abstract final IombLibraryPlatformIOS ios;
   abstract final IombLibraryPlatformAndroid android;
 
-  /// IOMb/Zensus (IOMb Library iOS)
-  Future<void> sessionConfiguration({required String baseURL, required String offerIdentifier, String? hybridIdentifier}) async {
-    throw UnimplementedError('sessionConfiguration() has not been implemented.');
+  /// Configures the measurement session.
+  ///
+  /// On Android, [measurementSystem] defaults to German IOMb; select
+  /// [IOMBMeasurementSystem.iombAt] for Austrian ÖWA. iOS ignores this option.
+  Future<void> sessionConfiguration({
+    required String baseURL,
+    required String offerIdentifier,
+    String? hybridIdentifier,
+    IOMBMeasurementSystem measurementSystem = IOMBMeasurementSystem.iomb,
+  }) async {
+    throw UnimplementedError(
+      'sessionConfiguration() has not been implemented.',
+    );
   }
 
-  Future<void> logViewEvent({required IOMBViewEvent type, required String category, String? comment}) async {
+  Future<void> logViewEvent({
+    required IOMBViewEvent type,
+    required String category,
+    String? comment,
+  }) async {
     throw UnimplementedError('logViewEvent() has not been implemented.');
   }
 
@@ -53,7 +61,9 @@ abstract class IombLibrary extends PlatformInterface {
   }
 
   void setFlutterDebugModeEnabled(bool enable) {
-    throw UnimplementedError('setFlutterDebugModeEnabled() has not been implemented.');
+    throw UnimplementedError(
+      'setFlutterDebugModeEnabled() has not been implemented.',
+    );
   }
 }
 
