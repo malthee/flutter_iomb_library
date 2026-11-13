@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'flutter_iomb_library'
-  s.version = '0.10.0'
+  s.version = '0.10.1'
   s.summary = 'Flutter integration for the INFOnline census measurement SDK.'
   s.homepage = 'https://github.com/codeforce-dev/flutter_iomb_library'
   s.license = { :file => '../LICENSE' }
